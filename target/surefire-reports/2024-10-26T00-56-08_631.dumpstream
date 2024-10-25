@@ -1,0 +1,5 @@
+# Created at 2024-10-26T00:56:09.879
+Boot Manifest-JAR contains absolute paths in classpath 'D:\WORK_SPACE\iot\airsense\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
