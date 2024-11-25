@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: airsense
+  data:
+    mongodb:
+      database: airsense_db
+      uri: mongodb+srv://quangkienta3:8ZXsJOe2EoB4mhj4@airsense.nlmsw.mongodb.net/?retryWrites=true&w=majority&appName=airsense
+
+mqtt:
+  broker-url: ssl://49b6dcd6236247be8bcfe1416017e3b6.s1.eu.hivemq.cloud:8883
+  username: group15_iot
+  password: Group15@iot
+  topic: sensor1
