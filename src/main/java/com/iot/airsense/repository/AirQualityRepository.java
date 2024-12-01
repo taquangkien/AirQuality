@@ -1,6 +1,7 @@
 package com.iot.airsense.repository;
 
 import com.iot.airsense.model.AirQuality;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -12,6 +13,9 @@ public interface AirQualityRepository extends MongoRepository<AirQuality, String
 
     List<AirQuality> findByLocationAndTimestampBetween(String location, LocalDateTime start, LocalDateTime end);
 
-    @Query(value = "{}", fields = "{'location': 1}")
+    @Aggregation(pipeline = {
+            "{ $group: { _id: '$location' } }",
+            "{ $project: { _id: 0, location: '$_id' } }"
+    })
     List<String> findDistinctLocations();
 }
