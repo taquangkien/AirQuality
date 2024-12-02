@@ -19,8 +19,8 @@ public class AirQuality {
     @Id
     private String id;
     private String deviceId;
-    private double co;
-    private double pm25;
+    private Double co;
+    private Double pm25;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
     private String location;

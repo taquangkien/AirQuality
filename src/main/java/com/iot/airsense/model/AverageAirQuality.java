@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 public class AverageAirQuality {
     @Id
     private String id;
-    private double averagePm25;
-    private double averageCo;
+    private Double averagePm25;
+    private Double averageCo;
     private String location;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;
