@@ -25,10 +25,10 @@ public class SummaryAqi {
     private final AverageAirQualityRepository averageAirQualityRepository;
     private final AqiSummaryRepository aqiSummaryRepository;
 
-    // Lịch tính toán AQI giờ vào hh:59:59 của mỗi giờ
+    // Lịch tính toán AQI giờ vào hh:00:00 của mỗi giờ
     @Scheduled(cron = "0 0 * * * *")
     public void calculateHourlyAqi() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime oneHourAgo = now.minusHours(1);
 
         List<String> locations = airQualityRepository.findDistinctLocations();
@@ -64,10 +64,10 @@ public class SummaryAqi {
         }
     }
 
-    // Lịch tính toán AQI ngày vào 23:59:59
+    // Lịch tính toán AQI ngày vào 00:00:00
     @Scheduled(cron = "0 0 0 * * *")
     public void calculateDailyAqi() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime dayStart = now.minusDays(1);
 
         List<String> locations = airQualityRepository.findDistinctLocations();
