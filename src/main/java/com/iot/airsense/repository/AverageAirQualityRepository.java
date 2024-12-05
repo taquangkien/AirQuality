@@ -2,6 +2,7 @@ package com.iot.airsense.repository;
 
 import com.iot.airsense.model.AverageAirQuality;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -15,6 +16,11 @@ public interface AverageAirQualityRepository extends MongoRepository<AverageAirQ
     List<AverageAirQuality> findByLocationAndStartTimeBetween(String location, LocalDateTime start, LocalDateTime end);
 
     // Lấy trực tiếp danh sách các giá trị averagePm25
-    @Query(value = "{ 'location': ?0 }", fields = "{ 'averagePm25': 1 }")
+    @Aggregation(pipeline = {
+            "{ $match: { 'location': ?0 } }",
+            "{ $project: { '_id': 0, 'averagePm25': 1 } }",
+            "{ $skip: ?#{#pageable.offset} }",
+            "{ $limit: ?#{#pageable.pageSize} }"
+    })
     List<Double> findTop12AveragePm25ByLocation(String location, Pageable pageable);
 }
