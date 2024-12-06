@@ -19,6 +19,8 @@ public class AqiSummary {
     @Id
     private String id;
     private int aqi;
+    private int pm25Aqi;
+    private int coAqi;
     private String location;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;

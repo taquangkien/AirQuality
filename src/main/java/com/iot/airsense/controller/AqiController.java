@@ -1,4 +1,5 @@
 package com.iot.airsense.controller;
+
 ;
 import com.iot.airsense.model.*;
 import com.iot.airsense.repository.AirQualityRepository;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +34,7 @@ public class AqiController {
 
     @GetMapping()
     public void calculateHourlyAqi() {
-        LocalDateTime now = LocalDateTime.now().minusHours(5).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime now = LocalDateTime.now().minusHours(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime oneHourAgo = now.minusHours(1);
 
         List<String> locations = airQualityRepository.findDistinctLocations().stream().filter(Objects::nonNull).toList();
@@ -49,7 +52,8 @@ public class AqiController {
                         .startTime(oneHourAgo)
                         .build();
 //                averageAirQualityRepository.save(averageAirQuality);
-                double pm25Nowcast = calculateNowcast(getLatest12AveragePm25(location));
+                List<AverageAirQuality> airQualities = getLatest12AveragePm25(location);
+                double pm25Nowcast = calculateNowcast(airQualities.stream().map(AverageAirQuality::getAveragePm25).toList());
                 int pm25Aqi = calculateHourlyAqiMetric(pm25Nowcast, MetricType.PM25);
 
                 int coAqi = calculateHourlyAqiMetric(currentHourCoAvg, MetricType.CO);
@@ -67,8 +71,9 @@ public class AqiController {
         }
     }
 
-    public List<Double> getLatest12AveragePm25(String location) {
-        Pageable pageable = PageRequest.of(0, 12, Sort.by(Sort.Direction.DESC, "startTime"));
-        return averageAirQualityRepository.findTop12AveragePm25ByLocation(location, pageable);
+    public List<AverageAirQuality> getLatest12AveragePm25(String location) {
+        LocalDateTime fromTime = LocalDateTime.now().minusHours(13);
+        return averageAirQualityRepository.findRecentAirQualityByLocation(fromTime,
+                location, Sort.by(Sort.Direction.DESC, "startTime"));
     }
 }
