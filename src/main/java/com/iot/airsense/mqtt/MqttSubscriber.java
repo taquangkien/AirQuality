@@ -11,8 +11,6 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -70,8 +68,6 @@ public class MqttSubscriber {
         objectMapper.registerModule(new JavaTimeModule());
         try {
             AirQuality data = objectMapper.readValue(payload, AirQuality.class);
-            LocalDateTime utcTimestamp = data.getTimestamp().minusHours(7);
-            data.setTimestamp(utcTimestamp);
             repository.save(data);
         } catch (Exception e) {
             e.printStackTrace();

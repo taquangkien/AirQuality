@@ -71,8 +71,8 @@ public class SummaryAqi {
         }
     }
 
-    // Lịch tính toán AQI ngày vào 00:00:00
-    @Scheduled(cron = "0 0 0 * * *")
+    // Lịch tính toán AQI ngày vào 00:01:00
+    @Scheduled(cron = "0 1 0 * * *")
     public void calculateDailyAqi() {
         LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime dayStart = now.minusDays(1);
