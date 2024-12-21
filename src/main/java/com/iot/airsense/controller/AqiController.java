@@ -42,7 +42,7 @@ public class AqiController {
     @GetMapping("/latest")
     public ResponseEntity<?> getLatestHourAqi(@RequestParam String location,
                                               HttpServletRequest request) {
-        String clientIp = request.getRemoteAddr();
+        String clientIp = getClientIp(request);
         Bucket bucket = ipRateLimiters.computeIfAbsent(clientIp, k -> createNewBucket());
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(aqiService.getLatestHourAqi(location));
@@ -58,7 +58,7 @@ public class AqiController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             HttpServletRequest request) {
-        String clientIp = request.getRemoteAddr();
+        String clientIp = getClientIp(request);
         Bucket bucket = ipRateLimiters.computeIfAbsent(clientIp, k -> createNewBucket());
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(aqiService.getAqiSummary(location, period, start, end));
@@ -69,7 +69,7 @@ public class AqiController {
 
     @GetMapping("/prediction")
     public ResponseEntity<?> getPredictionAqi(HttpServletRequest request) {
-        String clientIp = request.getRemoteAddr();
+        String clientIp = getClientIp(request);
         Bucket bucket = ipRateLimiters.computeIfAbsent(clientIp, k -> createNewBucket());
         if (bucket.tryConsume(1)) {
             List<PredictionAqi> predictionAqis = aqiService.getPredictionAqi();
@@ -130,6 +130,16 @@ public class AqiController {
         return averageAirQualityRepository.findRecentAirQualityByLocation(fromTime,
                 location, Sort.by(Sort.Direction.DESC, "startTime"));
     }
+
+    private String getClientIp(HttpServletRequest request) {
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        if (forwardedFor != null && !forwardedFor.isEmpty()) {
+            // Trường hợp có nhiều IP trong X-Forwarded-For (proxy chain), lấy IP đầu tiên
+            return forwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
+    }
+
 
     private Bucket createNewBucket() {
         return Bucket.builder()
