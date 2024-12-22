@@ -1,28 +1,31 @@
 package com.iot.airsense.controller;
 
 import com.iot.airsense.config.advice.ApiResponse;
+import com.iot.airsense.service.AqiService;
 import com.iot.airsense.service.NotificationService;
 import io.github.jav.exposerversdk.PushClientException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/notification")
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
+    private final AqiService aqiService;
 
     @PostMapping("/send")
     public ResponseEntity<?> sendNotification(
             @RequestParam String title,
-            @RequestParam String body) {
-
+            @RequestParam String body,
+            @RequestBody Map<String, String> requestBody) {
+        log.info(requestBody.toString());
 //        List<String> supplierNames = Arrays.asList("ExponentPushToken[XJ-vcHH450tXqbVT6nmcLy]" , "ExponentPushToken[]");
         List<String> supplierNames = List.of("ExponentPushToken[XJ-vcHH450tXqbVT6nmcLy]");
 

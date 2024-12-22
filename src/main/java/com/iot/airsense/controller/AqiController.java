@@ -72,9 +72,7 @@ public class AqiController {
         String clientIp = getClientIp(request);
         Bucket bucket = ipRateLimiters.computeIfAbsent(clientIp, k -> createNewBucket());
         if (bucket.tryConsume(1)) {
-            List<PredictionAqi> predictionAqis = aqiService.getPredictionAqi();
-            if (predictionAqis.size() == 0) throw new NotFoundException("Sorry, no prediction AQI available.");
-            return ResponseEntity.ok(predictionAqis);
+            return ResponseEntity.ok(aqiService.getPredictionAqi());
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(429,
                 "Rate limit exceeded", null));
