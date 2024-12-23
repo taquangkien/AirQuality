@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/notification")
 @RequiredArgsConstructor
@@ -23,9 +22,7 @@ public class NotificationController {
     @PostMapping("/send")
     public ResponseEntity<?> sendNotification(
             @RequestParam String title,
-            @RequestParam String body,
-            @RequestBody Map<String, String> requestBody) {
-        log.info(requestBody.toString());
+            @RequestParam String body) {
 //        List<String> supplierNames = Arrays.asList("ExponentPushToken[XJ-vcHH450tXqbVT6nmcLy]" , "ExponentPushToken[]");
         List<String> supplierNames = List.of("ExponentPushToken[XJ-vcHH450tXqbVT6nmcLy]");
 

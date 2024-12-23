@@ -6,6 +6,7 @@ import com.iot.airsense.service.LocationService;
 import com.iot.airsense.service.NotificationService;
 import io.github.jav.exposerversdk.PushClientException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/locations")
 @RequiredArgsConstructor
 public class LocationController {
@@ -23,17 +25,20 @@ public class LocationController {
     private final LocationService locationService;
     private String supplierName = "ExponentPushToken[]";
 
-//    @PostMapping
-//    public void processLocation(@RequestBody LocationRequest request) throws PushClientException, InterruptedException {
+    @PostMapping
+    public void processLocation(@RequestBody LocationRequest request) throws PushClientException, InterruptedException {
+        log.info(request.toString());
+
 //        String nearestLocation = locationService.getWithinRadiusByLocation(request.getLatitude(),
 //                request.getLongitude(), 1000.0);
 //        if (nearestLocation != null) {
-//            int aqi = aqiService.getLatestHourAqi(nearestLocation).getAqi();
+        int aqi = aqiService.getLatestHourAqi("Khoa's home").getAqi();
 //            // Nếu AQI vượt ngưỡng, gửi thông báo
 //            if (aqi > 50) {
-//                String message = String.format("Chất lượng không khí tệ: AQI = %d. Hãy cẩn thận!", aqi);
+        String message = String.format("Chất lượng không khí tệ: AQI = %d. Hãy cẩn thận!", aqi);
+        log.info(message);
 //                notificationService.sendExpoNotification(supplierName, "Cảnh báo AQI", message);
 //            }
 //        }
-//    }
+    }
 }
