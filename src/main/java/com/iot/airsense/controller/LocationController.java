@@ -33,12 +33,15 @@ public class LocationController {
 //                request.getLongitude(), 1000.0);
 //        if (nearestLocation != null) {
         int aqi = aqiService.getLatestHourAqi("Khoa's home").getAqi();
+        String message;
 //            // Nếu AQI vượt ngưỡng, gửi thông báo
-//            if (aqi > 50) {
-        String message = String.format("Chất lượng không khí tệ: AQI = %d. Hãy cẩn thận!", aqi);
-        log.info(message);
+        if (aqi > 50) {
+            message = String.format("Chất lượng không khí tệ: AQI = %d. Hãy cẩn thận!", aqi);
 //                notificationService.sendExpoNotification(supplierName, "Cảnh báo AQI", message);
-//            }
+        } else {
+            message = String.format("Chất lượng không khí ổn định: AQI = %d.", aqi);
+        }
+        log.info(message);
 //        }
     }
 }
